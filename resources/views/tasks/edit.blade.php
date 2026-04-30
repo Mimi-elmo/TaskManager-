@@ -1,79 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
-                <h1 class="text-2xl font-bold mb-6">Edit Task</h1>
+<div class="max-w-2xl mx-auto">
+    <a href="{{ route('tasks.index') }}" class="text-slate-400 hover:text-white mb-4 inline-flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        Back
+    </a>
 
-                <form action="{{ route('tasks.update', $task) }}" method="POST">
-                    @csrf
-                    @method('PUT')
+    <h1 class="text-2xl font-bold mb-6">Edit Task</h1>
 
-                    <div class="mb-4">
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Task Title *</label>
-                        <input type="text" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 @error('title') border-red-500 @enderror" 
-                               id="title" 
-                               name="title" 
-                               value="{{ old('title', $task->title) }}" 
-                               required>
-                        @error('title')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+    <form action="{{ route('tasks.update', $task) }}" method="POST" class="space-y-5">
+        @csrf @method('PUT')
 
-                    <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 @error('description') border-red-500 @enderror" 
-                                  id="description" 
-                                  name="description" 
-                                  rows="4">{{ old('description', $task->description) }}</textarea>
-                        @error('description')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+        <div>
+            <label class="block text-sm text-slate-300 mb-2">Title *</label>
+            <input type="text" name="title" required placeholder="Task title"
+                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 @error('title') border-red-500 @enderror"
+                value="{{ old('title', $task->title) }}">
+            @error('title') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
 
-                    <div class="mb-4">
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 @error('category_id') border-red-500 @enderror" 
-                                id="category_id" 
-                                name="category_id" 
-                                required>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id', $task->category_id) == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+        <div>
+            <label class="block text-sm text-slate-300 mb-2">Description</label>
+            <textarea name="description" rows="3" placeholder="Task description"
+                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 resize-none">{{ old('description', $task->description) }}</textarea>
+        </div>
 
-                    <div class="mb-6">
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
-                                id="status" 
-                                name="status">
-                            <option value="à faire" {{ old('status', $task->status) === 'à faire' ? 'selected' : '' }}>To Do</option>
-                            <option value="en cours" {{ old('status', $task->status) === 'en cours' ? 'selected' : '' }}>In Progress</option>
-                            <option value="terminé" {{ old('status', $task->status) === 'terminé' ? 'selected' : '' }}>Done</option>
-                        </select>
-                    </div>
-
-                    <div class="flex gap-3">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md">
-                            Update Task
-                        </button>
-                        <a href="{{ route('tasks.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-md">
-                            Cancel
-                        </a>
-                    </div>
-                </form>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm text-slate-300 mb-2">Category *</label>
+                <select name="category_id" required
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500">
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ old('category_id', $task->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm text-slate-300 mb-2">Status *</label>
+                <select name="status" required
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500">
+                    <option value="à faire" {{ old('status', $task->status) === 'à faire' ? 'selected' : '' }}>To Do</option>
+                    <option value="en cours" {{ old('status', $task->status) === 'en cours' ? 'selected' : '' }}>In Progress</option>
+                    <option value="terminé" {{ old('status', $task->status) === 'terminé' ? 'selected' : '' }}>Done</option>
+                </select>
             </div>
         </div>
-    </div>
+
+        <div class="flex gap-4">
+            <button type="submit" class="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-xl font-medium">Save</button>
+            <a href="{{ route('tasks.index') }}" class="bg-slate-800 hover:bg-slate-700 px-6 py-3 rounded-xl font-medium border border-slate-700">Cancel</a>
+        </div>
+    </form>
 </div>
 @endsection

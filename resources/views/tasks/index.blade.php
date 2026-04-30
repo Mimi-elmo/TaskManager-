@@ -1,85 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold">My Tasks</h1>
-                    <a href="{{ route('tasks.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md">
-                        + New Task
-                    </a>
-                </div>
-
-                @if(session('success'))
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse($tasks as $task)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $task->title }}</div>
-                                        @if($task->description)
-                                            <div class="text-sm text-gray-500">{{ Str::limit($task->description, 50) }}</div>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            {{ $task->category->name ?? 'N/A' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <form action="{{ route('tasks.update', $task) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('PUT')
-                                            <select name="status" class="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" onchange="this.form.submit()">
-                                                <option value="à faire" {{ $task->status === 'à faire' ? 'selected' : '' }}>To Do</option>
-                                                <option value="en cours" {{ $task->status === 'en cours' ? 'selected' : '' }}>In Progress</option>
-                                                <option value="terminé" {{ $task->status === 'terminé' ? 'selected' : '' }}>Done</option>
-                                            </select>
-                                        </form>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $task->created_at->format('M d, Y') }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route('tasks.edit', $task) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                        <form action="{{ route('tasks.destroy', $task) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Delete this task?')">
-                                                Delete
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
-                                        No tasks yet. Create your first task!
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div class="space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold">My Tasks</h1>
+            <p class="text-slate-400">{{ $tasks->total() }} tasks</p>
         </div>
+        <a href="{{ route('tasks.create') }}" class="bg-purple-600 hover:bg-purple-500 px-5 py-2.5 rounded-xl font-medium inline-flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            New Task
+        </a>
     </div>
+
+    @if($tasks->isEmpty())
+        <div class="bg-slate-800 rounded-2xl p-12 text-center border border-slate-700">
+            <svg class="w-12 h-12 text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            <h3 class="text-xl font-semibold mb-2">No tasks yet</h3>
+            <p class="text-slate-400 mb-4">Create your first task to get started</p>
+            <a href="{{ route('tasks.create') }}" class="bg-purple-600 hover:bg-purple-500 px-5 py-2.5 rounded-xl font-medium inline-block">Create Task</a>
+        </div>
+    @else
+        <div class="space-y-3">
+            @foreach($tasks as $task)
+                <div class="bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-purple-500/50 flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-lg {{ $task->status === 'terminé' ? 'line-through text-slate-500' : '' }}">{{ $task->title }}</h3>
+                        @if($task->description)
+                            <p class="text-slate-400 text-sm mt-1 truncate">{{ $task->description }}</p>
+                        @endif
+                        <div class="flex gap-2 mt-2">
+                            <span class="bg-purple-500/20 text-purple-300 text-xs px-2 py-1 rounded-full">{{ $task->category?->name ?? 'Uncategorized' }}</span>
+                            <span class="text-xs px-2 py-1 rounded-full 
+                                {{ $task->status === 'terminé' ? 'bg-emerald-500/20 text-emerald-300' : 
+                                   ($task->status === 'en cours' ? 'bg-amber-500/20 text-amber-300' : 'bg-rose-500/20 text-rose-300') }}">
+                                {{ $task->status === 'terminé' ? 'Done' : ($task->status === 'en cours' ? 'In Progress' : 'To Do') }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ route('tasks.edit', $task) }}" class="bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg text-sm">Edit</a>
+                        <form action="{{ route('tasks.destroy', $task) }}" method="POST" class="inline">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 px-3 py-2 rounded-lg text-sm" onclick="return confirm('Delete?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        @if($tasks->hasPages())
+            <div class="flex justify-center">{{ $tasks->links() }}</div>
+        @endif
+    @endif
 </div>
 @endsection

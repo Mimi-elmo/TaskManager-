@@ -14,25 +14,48 @@
         @method('put')
 
         <div>
-            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+            <label for="update_password_current_password" class="block text-sm font-semibold text-gray-700 mb-2">Current Password</label>
+            <input type="password" 
+                   class="input-apply" 
+                   id="update_password_current_password" 
+                   name="current_password" 
+                   autocomplete="current-password">
+            @error('current_password')
+                <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    {{ $message }}
+                </p>
+            @enderror
         </div>
 
         <div>
-            <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+            <label for="update_password_password" class="block text-sm font-semibold text-gray-700 mb-2">New Password</label>
+            <input type="password" 
+                   class="input-apply" 
+                   id="update_password_password" 
+                   name="password" 
+                   autocomplete="new-password">
+            @error('password')
+                <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    {{ $message }}
+                </p>
+            @enderror
         </div>
 
         <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
+            <label for="update_password_password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+            <input type="password" 
+                   class="input-apply" 
+                   id="update_password_password_confirmation" 
+                   name="password_confirmation" 
+                   autocomplete="new-password">
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <button type="submit" class="btn-apply-apply bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold px-6 py-3 rounded-xl transition duration-200">
+                {{ __('Save') }}
+            </button>
 
             @if (session('status') === 'password-updated')
                 <p

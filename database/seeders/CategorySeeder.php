@@ -11,25 +11,18 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
+        $defaultCategories = ['Work', 'Personal', 'Shopping'];
 
         foreach ($users as $user) {
-            Category::create([
-                'name' => 'Work',
-                'description' => 'Work-related tasks',
-                'user_id' => $user->id,
-            ]);
-
-            Category::create([
-                'name' => 'Personal',
-                'description' => 'Personal tasks',
-                'user_id' => $user->id,
-            ]);
-
-            Category::create([
-                'name' => 'Shopping',
-                'description' => 'Shopping list',
-                'user_id' => $user->id,
-            ]);
+            foreach ($defaultCategories as $categoryName) {
+                Category::firstOrCreate([
+                    'name' => $categoryName,
+                    'user_id' => $user->id,
+                ], [
+                    'description' => $categoryName . '-related tasks',
+                    'user_id' => $user->id,
+                ]);
+            }
         }
     }
 }
