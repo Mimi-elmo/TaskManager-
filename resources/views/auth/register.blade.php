@@ -1,52 +1,51 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('layouts.guest')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+@section('content')
+<div class="text-center mb-6">
+    <h2 class="text-xl font-bold">Create Account</h2>
+    <p class="text-slate-400">Start managing your tasks</p>
+</div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+<form method="POST" action="{{ route('register') }}">
+    @csrf
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    <div class="mb-4">
+        <label for="name" class="block text-sm text-slate-300 mb-2">Name</label>
+        <input id="name" type="text" name="name" required autofocus
+            class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 @error('name') border-red-500 @enderror"
+            placeholder="John Doe" value="{{ old('name') }}">
+        @error('name') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+    <div class="mb-4">
+        <label for="email" class="block text-sm text-slate-300 mb-2">Email</label>
+        <input id="email" type="email" name="email" required
+            class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 @error('email') border-red-500 @enderror"
+            placeholder="you@example.com" value="{{ old('email') }}">
+        @error('email') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    <div class="mb-4">
+        <label for="password" class="block text-sm text-slate-300 mb-2">Password</label>
+        <input id="password" type="password" name="password" required
+            class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 @error('password') border-red-500 @enderror"
+            placeholder="••••••••">
+        @error('password') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+    <div class="mb-6">
+        <label for="password_confirmation" class="block text-sm text-slate-300 mb-2">Confirm Password</label>
+        <input id="password_confirmation" type="password" name="password_confirmation" required
+            class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500"
+            placeholder="••••••••">
+    </div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 py-3 rounded-xl font-medium">
+        Register
+    </button>
+</form>
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+<div class="mt-6 text-center">
+    <p class="text-slate-400">Already have an account? <a href="{{ route('login') }}" class="text-purple-400 hover:text-purple-300">Sign In</a></p>
+</div>
+@endsection
